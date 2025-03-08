@@ -1,8 +1,9 @@
-// frontend/src/components/Login.js
+// frontend/src/components/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Login = () => {
+const Register = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -10,17 +11,23 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);  // Store the JWT token in localStorage
-      alert('Login successful');
+      await axios.post('/api/auth/register', { username, email, password });
+      alert('Registration successful');
     } catch (error) {
-      alert('Error logging in');
+      alert('Error registering user');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
+      <h2>Register</h2>
+      <input 
+        type="text" 
+        placeholder="Username" 
+        value={username} 
+        onChange={(e) => setUsername(e.target.value)} 
+        required
+      />
       <input 
         type="email" 
         placeholder="Email" 
@@ -35,9 +42,9 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)} 
         required
       />
-      <button type="submit">Login</button>
+      <button type="submit">Register</button>
     </form>
   );
 };
 
-export default Login;
+export default Register;

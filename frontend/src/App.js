@@ -1,34 +1,25 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from './Home';
+import Login from './Login';
+import Register from './Register';
 
-// Components for each page
-import Home from "./pages/Home";
-import About from "./pages/About";
-
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="App">
-        {/* Basic Navigation */}
-        <nav>
-          <ul>
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/about">About</a>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Define Routes */}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </div>
+      <nav>
+        <Link to="/">Home</Link> | 
+        <Link to="/login">Login</Link> | 
+        <Link to="/register">Register</Link>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;

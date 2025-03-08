@@ -1,48 +1,48 @@
 // backend/server.js
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const userRoutes = require('./routes/userRoutes');
-const authRoutes = require('./routes/authRoutes'); // Import auth routes
-const path = require('path');
+const express = require("express");
+const mongoose = require("mongoose");
+const path = require("path");
+const cors = require("cors");
+const authRoutes = require("./routes/authRoutes");
+const dotenv = require("dotenv");
+
+dotenv.config(); // Load environment variables
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
-app.use(express.json()); // To parse JSON bodies
+app.use(express.json()); // Parse JSON requests
+app.use(cors()); // Enable CORS for frontend-backend communication
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/deindoctrination-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.log('Error connecting to MongoDB:', err));
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB", err);
+  });
 
 // Routes
-app.use('/api/users', userRoutes); // User routes (for profile, etc.)
-app.use('/api/auth', authRoutes);  // Auth routes (for login, registration)
+app.use("/api/auth", authRoutes); // Authentication routes
 
-// Serve React frontend in production
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, 'frontend/build')));
+// Serve the React app in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "frontend", "build")));
 
-  // Handle React routing, return all requests to React app
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+  // For any request that doesn't match an API route, serve the React frontend
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
   });
 } else {
-  // Default API route for development
-  app.get('/', (req, res) => {
-    res.send('API is running');
-  });
+  // Development: Serve React app from /frontend directory
+  app.use(express.static(path.join(__dirname, "frontend", "public")));
 }
 
 // Start the server
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
