@@ -1,13 +1,15 @@
-// src/components/HomePage.js
-import React from "react";
+import { Link } from "react-router-dom";
 
-function HomePage() {
+function Home() {
   return (
     <div>
-      <h1>Welcome to the Public Deindoctrination App</h1>
-      <p>Your journey starts here. Let's build a better future together!</p>
+      <h1>Welcome to the Home Page!</h1>
+      <nav>
+        <Link to="/login">Login</Link> | 
+        <Link to="/register">Register</Link>
+      </nav>
     </div>
   );
 }
 
-export default HomePage;
+export default Home;
